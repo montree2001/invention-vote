@@ -1,0 +1,619 @@
+/* assets/css/responsive.css - CSS สำหรับ Responsive Design */
+
+/* Tablet Styles (768px - 991px) */
+@media (max-width: 991px) {
+    /* Sidebar Management */
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+        box-shadow: var(--shadow-lg);
+        z-index: 1001;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+    
+    /* Navigation */
+    .navbar {
+        padding: 0.75rem 1rem;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    /* Stats Cards */
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .stats-icon {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 0 auto 1rem;
+        float: none;
+    }
+    
+    .stats-content {
+        text-align: center;
+    }
+    
+    /* Tables */
+    .table-responsive {
+        border: 1px solid var(--gray-200);
+        border-radius: var(--border-radius);
+    }
+    
+    .table {
+        font-size: 0.875rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem;
+        white-space: nowrap;
+    }
+    
+    /* Cards */
+    .card-body {
+        padding: 1rem;
+    }
+    
+    /* Page Header */
+    .page-header {
+        margin: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .breadcrumb {
+        font-size: 0.8rem;
+    }
+    
+    /* Buttons */
+    .btn-group {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .btn-sm {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Forms */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-control {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    /* Dropdown */
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        border: 1px solid var(--gray-200);
+        border-radius: 0;
+        margin-top: 0;
+    }
+}
+
+/* Mobile Styles (767px and below) */
+@media (max-width: 767px) {
+    /* Layout */
+    .container-fluid {
+        padding: 0 1rem;
+    }
+    
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    /* Grid System - Stack columns on mobile */
+    .col,
+    .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+    .col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
+    .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6,
+    .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12,
+    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6,
+    .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    /* Navigation */
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .user-info {
+        display: none;
+    }
+    
+    /* Page Header */
+    .page-header {
+        margin: 0.5rem 0;
+        padding: 0.75rem;
+    }
+    
+    .page-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .page-actions {
+        margin-top: 1rem;
+    }
+    
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    /* Stats Cards */
+    .stats-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .stats-number {
+        font-size: 1.75rem;
+    }
+    
+    .stats-label {
+        font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    .table {
+        font-size: 0.8rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.375rem 0.25rem;
+        vertical-align: middle;
+    }
+    
+    /* Hide less important columns on mobile */
+    .table .d-none-mobile {
+        display: none !important;
+    }
+    
+    /* Cards */
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-header,
+    .card-body,
+    .card-footer {
+        padding: 0.75rem;
+    }
+    
+    /* Buttons */
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        justify-content: center;
+    }
+    
+    .btn:last-child {
+        margin-bottom: 0;
+    }
+    
+    .btn-group {
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        margin-bottom: 0.25rem;
+    }
+    
+    .action-buttons {
+        width: 100%;
+    }
+    
+    .action-buttons .btn {
+        flex: 1;
+        min-width: auto;
+    }
+    
+    /* Forms */
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .form-group {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .input-group {
+        flex-direction: column;
+    }
+    
+    .input-group .form-control,
+    .input-group .input-group-text {
+        width: 100%;
+        border-radius: var(--border-radius) !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Modals */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+    
+    .modal-title {
+        font-size: 1.1rem;
+    }
+    
+    /* Alerts */
+    .alert {
+        margin-bottom: 0.75rem;
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Pagination */
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .page-link {
+        padding: 0.375rem 0.5rem;
+        font-size: 0.875rem;
+        margin: 0.125rem;
+    }
+    
+    /* User Type Stats */
+    .user-type-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.75rem 0;
+    }
+    
+    .user-type-bar {
+        width: 100%;
+        max-width: none;
+    }
+    
+    /* Competition Status */
+    .competition-status-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .status-item {
+        padding: 0.75rem;
+    }
+    
+    .status-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+    
+    .status-count {
+        font-size: 1.25rem;
+    }
+    
+    /* User List */
+    .user-item {
+        padding: 0.5rem 0;
+    }
+    
+    .user-avatar-list {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+    
+    .user-name-list {
+        font-size: 0.85rem;
+    }
+    
+    .user-meta-list,
+    .user-last-login {
+        font-size: 0.75rem;
+    }
+    
+    /* System Info */
+    .system-info-item {
+        padding: 0.75rem 0;
+        text-align: center;
+    }
+    
+    .system-info-label {
+        font-size: 0.8rem;
+    }
+    
+    .system-info-value {
+        font-size: 1.1rem;
+    }
+    
+    /* Login Page */
+    .login-container {
+        padding: 1rem;
+    }
+    
+    .login-card {
+        margin: 1rem 0;
+    }
+    
+    .login-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .login-title {
+        font-size: 1.25rem;
+    }
+    
+    .login-subtitle {
+        font-size: 0.85rem;
+    }
+}
+
+/* Small Mobile Styles (480px and below) */
+@media (max-width: 480px) {
+    /* Typography */
+    .page-title {
+        font-size: 1.125rem;
+    }
+    
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    
+    /* Stats */
+    .stats-number {
+        font-size: 1.5rem;
+    }
+    
+    /* Tables - Make scrollable horizontally */
+    .table-responsive {
+        font-size: 0.75rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.25rem;
+        min-width: 80px;
+    }
+    
+    /* Cards */
+    .card-header,
+    .card-body,
+    .card-footer {
+        padding: 0.5rem;
+    }
+    
+    /* Status Items */
+    .status-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+    }
+    
+    .status-count {
+        font-size: 1.1rem;
+    }
+    
+    .status-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* Landscape Phone */
+@media (max-width: 767px) and (orientation: landscape) {
+    .navbar {
+        padding: 0.375rem 1rem;
+    }
+    
+    .main-content {
+        padding-top: 0.5rem;
+    }
+    
+    .page-header {
+        padding: 0.5rem;
+        margin: 0.25rem 0;
+    }
+    
+    .stats-card {
+        padding: 0.75rem;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .navbar,
+    .mobile-menu-toggle,
+    .page-actions,
+    .action-buttons,
+    .btn,
+    .alert,
+    .dropdown,
+    .pagination {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .page-header {
+        margin-bottom: 1rem !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #000 !important;
+        break-inside: avoid;
+        margin-bottom: 1rem !important;
+    }
+    
+    .table {
+        border-collapse: collapse !important;
+        font-size: 10pt !important;
+    }
+    
+    .table th,
+    .table td {
+        border: 1px solid #000 !important;
+        padding: 0.25rem !important;
+    }
+    
+    .stats-card {
+        border: 1px solid #000 !important;
+        padding: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        break-inside: avoid;
+    }
+    
+    .stats-number {
+        font-size: 1.5rem !important;
+        color: #000 !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 10pt !important;
+    }
+    
+    .container,
+    .container-fluid {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .card,
+    .table,
+    .form-control,
+    .btn {
+        border-width: 2px !important;
+    }
+    
+    .btn:focus,
+    .form-control:focus {
+        outline: 3px solid #000 !important;
+        outline-offset: 2px !important;
+    }
+    
+    .sidebar {
+        border-right-width: 3px !important;
+    }
+    
+    .navbar {
+        border-bottom-width: 3px !important;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .sidebar {
+        transition: none !important;
+    }
+    
+    .stats-card:hover {
+        transform: none !important;
+    }
+}
+
+/* Focus Management for Accessibility */
+@media (max-width: 767px) {
+    .btn:focus,
+    .form-control:focus,
+    .nav-link:focus {
+        outline: 2px solid var(--primary-color) !important;
+        outline-offset: 2px !important;
+    }
+}
+
+/* Utility Classes for Responsive */
+@media (max-width: 991px) {
+    .d-lg-none { display: none !important; }
+    .d-lg-block { display: block !important; }
+    .d-lg-inline { display: inline !important; }
+    .d-lg-inline-block { display: inline-block !important; }
+    .d-lg-flex { display: flex !important; }
+}
+
+@media (max-width: 767px) {
+    .d-md-none { display: none !important; }
+    .d-md-block { display: block !important; }
+    .d-md-inline { display: inline !important; }
+    .d-md-inline-block { display: inline-block !important; }
+    .d-md-flex { display: flex !important; }
+    
+    .text-md-center { text-align: center !important; }
+    .text-md-left { text-align: left !important; }
+    .text-md-right { text-align: right !important; }
+}
+
+@media (max-width: 575px) {
+    .d-sm-none { display: none !important; }
+    .d-sm-block { display: block !important; }
+    .d-sm-inline { display: inline !important; }
+    .d-sm-inline-block { display: inline-block !important; }
+    .d-sm-flex { display: flex !important; }
+    
+    .text-sm-center { text-align: center !important; }
+    .text-sm-left { text-align: left !important; }
+    .text-sm-right { text-align: right !important; }
+}

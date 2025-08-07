@@ -1,8 +1,8 @@
 <?php
 // includes/auth.php - ระบบการตรวจสอบสิทธิ์
 
-require_once 'config/database.php';
-require_once 'includes/functions.php';
+require_once dirname(__DIR__) . '/config/database.php';
+require_once dirname(__DIR__) . '/includes/functions.php';
 
 class Auth {
     private $db;
@@ -111,12 +111,12 @@ class Auth {
     // ฟังก์ชันบังคับการเข้าสู่ระบบ
     public function requireLogin($allowedRoles = []) {
         if (!$this->isLoggedIn()) {
-            header('Location: login.php');
+            header('Location: ' . BASE_URL . 'login.php');
             exit();
         }
         
         if (!$this->hasPermission($allowedRoles)) {
-            header('Location: unauthorized.php');
+            header('Location: ' . BASE_URL . 'unauthorized.php');
             exit();
         }
     }

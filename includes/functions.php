@@ -1,8 +1,8 @@
 <?php
 // includes/functions.php - ฟังก์ชันทั่วไปที่ใช้ร่วมกัน
 
-require_once 'config/database.php';
-require_once 'config/settings.php';
+require_once dirname(__DIR__) . '/config/database.php';
+require_once dirname(__DIR__) . '/config/settings.php';
 
 // ฟังก์ชันสำหรับบันทึก Audit Log
 function logAuditAction($userId, $action, $tableName = null, $recordId = null, $oldValues = null, $newValues = null) {
@@ -38,12 +38,12 @@ function logAuditAction($userId, $action, $tableName = null, $recordId = null, $
 // ฟังก์ชันสำหรับตรวจสอบสิทธิ์การเข้าถึง
 function checkUserRole($allowedRoles = []) {
     if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_type'])) {
-        header('Location: login.php');
+        header('Location: ' . BASE_URL . 'login.php');
         exit();
     }
     
     if (!empty($allowedRoles) && !in_array($_SESSION['user_type'], $allowedRoles)) {
-        header('Location: unauthorized.php');
+        header('Location: ' . BASE_URL . 'unauthorized.php');
         exit();
     }
     

@@ -1,25 +1,48 @@
 <?php
-// config/database.php
+// config/config.php
+session_start();
+
+// Database Settings
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'invention_vote_system');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
 
-// สร้าง DSN (Data Source Name)
-$dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+// Site Settings
+define('SITE_NAME', 'ระบบประมวลผลสิ่งประดิษฐ์คนรุ่นใหม่');
 
-// PDO options
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES => false,
-    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
+// User Types
+$user_types = [
+    'SUPER_ADMIN' => 'ผู้ดูแลระบบส่วนกลาง',
+    'ADMIN' => 'ผู้ดูแลระบบ',
+    'CHAIRMAN' => 'ประธานกรรมการ',
+    'JUDGE' => 'กรรมการ'
 ];
 
+// Database Connection
+$pdo = null;
 try {
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+    $pdo = new PDO(
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+        DB_USER,
+        DB_PASS,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
 } catch (PDOException $e) {
-    die('Connection failed: ' . $e->getMessage());
+    die('Database connection failed');
+}
+
+// Simple Functions
+function is_logged_in() {
+    return isset($_SESSION['user_id']);
+}
+
+function redirect($url) {
+    header("Location: $url");
+    exit;
+}
+
+function clean_input($data) {
+    return htmlspecialchars(trim($data));
 }
 ?>

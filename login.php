@@ -1,173 +1,191 @@
 <?php
-// login.php
-require_once 'config/config.php';
+// login.php - หน้าเข้าสู่ระบบ
+require_once 'config/settings.php';
+require_once 'includes/auth.php';
 
-// ถ้าเข้าสู่ระบบแล้วให้ไปหน้าหลัก
-if (is_logged_in()) {
-    redirect('index.php');
+// ถ้าเข้าสู่ระบบแล้วให้ redirect ไปหน้าที่เหมาะสม
+if ($auth->isLoggedIn()) {
+    $userType = $_SESSION['user_type'];
+    switch ($userType) {
+        case USER_TYPE_SUPER_ADMIN:
+            header('Location: super-admin/');
+            break;
+        case USER_TYPE_ADMIN:
+            header('Location: admin/');
+            break;
+        case USER_TYPE_CHAIRMAN:
+            header('Location: chairman/');
+            break;
+        case USER_TYPE_JUDGE:
+            header('Location: judge/');
+            break;
+        default:
+            header('Location: dashboard.php');
+    }
+    exit();
 }
 
 $error = '';
-$success = '';
 
-// ตรวจสอบ messages
-if (isset($_GET['logout'])) {
-    $success = 'ออกจากระบบเรียบร้อยแล้ว';
-}
-if (isset($_GET['timeout'])) {
-    $error = 'เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่';
-}
-
-// ประมวลผล Login
+// Process login form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = clean_input($_POST['username'] ?? '');
+    $username = sanitizeInput($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $csrf_token = $_POST['csrf_token'] ?? '';
     
-    if (empty($username) || empty($password)) {
-        $error = 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน';
+    // Validate CSRF token
+    if (!verifyCSRFToken($csrf_token)) {
+        $error = 'โทเค็นความปลอดภัยไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง';
     } else {
-        try {
-            require_once 'classes/Database.php';
-            $db = Database::getInstance();
+        // Validate input
+        if (empty($username)) {
+            $error = 'กรุณากรอกชื่อผู้ใช้';
+        } elseif (empty($password)) {
+            $error = 'กรุณากรอกรหัสผ่าน';
+        } else {
+            // Attempt login
+            $loginResult = $auth->login($username, $password);
             
-            $user = $db->selectOne(
-                "SELECT * FROM users WHERE username = ? AND is_active = 1",
-                [$username]
-            );
-            
-            if ($user && password_verify($password, $user['password'])) {
-                // Login สำเร็จ
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
-                $_SESSION['user_type'] = $user['user_type'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['login_time'] = time();
-                
-                redirect('index.php');
+            if ($loginResult['success']) {
+                // Redirect based on user type
+                $userType = $loginResult['user_type'];
+                switch ($userType) {
+                    case USER_TYPE_SUPER_ADMIN:
+                        header('Location: super-admin/');
+                        break;
+                    case USER_TYPE_ADMIN:
+                        header('Location: admin/');
+                        break;
+                    case USER_TYPE_CHAIRMAN:
+                        header('Location: chairman/');
+                        break;
+                    case USER_TYPE_JUDGE:
+                        header('Location: judge/');
+                        break;
+                    default:
+                        header('Location: dashboard.php');
+                }
+                exit();
             } else {
-                $error = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+                $error = $loginResult['message'];
             }
-        } catch (Exception $e) {
-            $error = 'เกิดข้อผิดพลาดในระบบ';
         }
     }
 }
+
+// Generate CSRF token
+$csrf_token = generateCSRFToken();
 ?>
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เข้าสู่ระบบ - <?php echo SITE_NAME; ?></title>
+    <title>เข้าสู่ระบบ - <?php echo SYSTEM_NAME; ?></title>
     
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
     
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     
-    <!-- Google Fonts - Kanit -->
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            font-family: 'Kanit', sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            overflow: hidden;
-            max-width: 400px;
-            width: 100%;
-        }
-        .login-header {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-        .login-body {
-            padding: 2rem;
-        }
-    </style>
+    <!-- Meta tags -->
+    <meta name="description" content="ระบบประมวลผลสิ่งประดิษฐ์คนรุ่นใหม่">
+    <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
-
-<div class="login-card">
-    <!-- Header -->
-    <div class="login-header">
-        <i class="bi bi-lightbulb display-4 mb-3"></i>
-        <h4 class="mb-1">INVENTION-VOTE</h4>
-        <p class="mb-0 opacity-75">ระบบประมวลผลสิ่งประดิษฐ์คนรุ่นใหม่</p>
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="card-body">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <i class="icon-invention">🔬</i>
+                    </div>
+                    <h1 class="login-title">เข้าสู่ระบบ</h1>
+                    <p class="login-subtitle"><?php echo SYSTEM_NAME; ?></p>
+                </div>
+                
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger mb-3">
+                        <strong>ข้อผิดพลาด!</strong> <?php echo $error; ?>
+                    </div>
+                <?php endif; ?>
+                
+                <?php 
+                $alert = getAlert();
+                if ($alert): 
+                ?>
+                    <div class="alert alert-<?php echo $alert['type']; ?> mb-3">
+                        <?php echo $alert['message']; ?>
+                    </div>
+                <?php endif; ?>
+                
+                <form method="POST" action="" data-validate="true" autocomplete="off">
+                    <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                    
+                    <div class="form-group">
+                        <label for="username" class="form-label">ชื่อผู้ใช้</label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="username" 
+                            name="username" 
+                            value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>"
+                            required
+                            autocomplete="username"
+                            placeholder="กรอกชื่อผู้ใช้"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">รหัสผ่าน</label>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            id="password" 
+                            name="password" 
+                            required
+                            autocomplete="current-password"
+                            placeholder="กรอกรหัสผ่าน"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-lg d-block w-100">
+                            เข้าสู่ระบบ
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        หากคุณลืมรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบ<br>
+                        Version <?php echo SYSTEM_VERSION; ?>
+                    </small>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <!-- Body -->
-    <div class="login-body">
-        
-        <?php if ($error): ?>
-        <div class="alert alert-danger">
-            <i class="bi bi-exclamation-triangle"></i>
-            <?php echo $error; ?>
-        </div>
-        <?php endif; ?>
-        
-        <?php if ($success): ?>
-        <div class="alert alert-success">
-            <i class="bi bi-check-circle"></i>
-            <?php echo $success; ?>
-        </div>
-        <?php endif; ?>
-        
-        <form method="POST">
-            <div class="mb-3">
-                <label class="form-label">
-                    <i class="bi bi-person"></i> ชื่อผู้ใช้
-                </label>
-                <input type="text" 
-                       name="username" 
-                       class="form-control form-control-lg" 
-                       value="<?php echo htmlspecialchars($username ?? ''); ?>"
-                       required>
-            </div>
-            
-            <div class="mb-4">
-                <label class="form-label">
-                    <i class="bi bi-lock"></i> รหัสผ่าน
-                </label>
-                <input type="password" 
-                       name="password" 
-                       class="form-control form-control-lg" 
-                       required>
-            </div>
-            
-            <button type="submit" class="btn btn-primary btn-lg w-100">
-                <i class="bi bi-box-arrow-in-right"></i>
-                เข้าสู่ระบบ
-            </button>
-        </form>
-        
-        <hr class="my-4">
-        
-        <div class="text-center">
-            <small class="text-muted">
-                <i class="bi bi-info-circle"></i>
-                ไม่มีการลงทะเบียน กรุณาติดต่อผู้ดูแลระบบ
-            </small>
-        </div>
-        
-    </div>
-</div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- JavaScript -->
+    <script src="assets/js/main.js"></script>
+    
+    <script>
+    // Auto-focus on username field
+    document.addEventListener('DOMContentLoaded', function() {
+        const usernameField = document.getElementById('username');
+        if (usernameField && !usernameField.value) {
+            usernameField.focus();
+        }
+    });
+    
+    // Show/hide password toggle (optional enhancement)
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+    }
+    </script>
 </body>
 </html>

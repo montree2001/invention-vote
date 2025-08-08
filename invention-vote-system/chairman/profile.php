@@ -1,0 +1,3 @@
+<?php
+// Chairman profile placeholder
+?>

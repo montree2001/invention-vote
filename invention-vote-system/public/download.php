@@ -1,0 +1,3 @@
+<?php
+// Public download placeholder
+?>

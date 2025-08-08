@@ -1,0 +1,3 @@
+<?php
+// Forgot password placeholder
+?>

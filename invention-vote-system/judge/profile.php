@@ -1,0 +1,3 @@
+<?php
+// Judge profile placeholder
+?>

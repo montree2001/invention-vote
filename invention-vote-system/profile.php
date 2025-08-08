@@ -1,0 +1,3 @@
+<?php
+// Profile management placeholder
+?>
